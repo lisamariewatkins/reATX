@@ -31,6 +31,7 @@ $(document).ready(function() {
 //=====================================================================
     
     function initContributeMap(){
+        var marker;
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
           zoom: 17
@@ -56,14 +57,30 @@ $(document).ready(function() {
 
         google.maps.event.addListener(map, 'click', function(event) {
             placeMarker(event.latLng);
+            google.maps.event.addListener(marker, "click", function() {
+                infowindow.open(map, marker);
+            });
         });
 
         function placeMarker(location) {
-            var marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: location, 
                 map: map
             });
         }
+
+        var html ="<table>" +
+        "<tr><td>Your Name:</td> <td><input type='text' id='name'/> </td> </tr>" +
+        "<tr><td>Type of Bin:</td> <td><select id='binType' style='display: block'>" +
+        "<option value='publicBin'>Public Bin</option>" +
+        "<option value='privateBin'>Private Bin</option>" +
+        "</select> </td></tr>" +
+        "<tr><td>Additional Comments:</td> <td><input type='text' id='comments'/> </td></tr>" +
+        "<tr><td><input type='button' value='Save & Close' onclick='saveData()'/></td></tr>";
+
+        infowindow = new google.maps.InfoWindow({
+            content: html
+        });
 
     }
 
@@ -71,13 +88,7 @@ $(document).ready(function() {
 //======================================================================
 
         //Function to pull up table for the marker
-    var html ="<table>" +
-    "<tr><td>Your Name:</td> <td><input type='text' id='name'> </td> </tr>" +
-    "<tr><td>Type of Bin:</td> <td><select id='type'>" +
-    "<option value='publicBin' SELECTED>Public Bin</option>" +
-    "<option value='privateBin'>Private Bin</option>" +
-    "</select> </td></tr>" +
-    "<tr><td></td><td><input type='button' value='Save & Close' onclick='saveData()'/></td></tr>"
+    
 
         function saveData() {
             var name = $("#name").val().trim();
