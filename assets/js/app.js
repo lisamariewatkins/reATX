@@ -26,6 +26,32 @@ $(document).ready(function() {
             // Browser doesn't support Geolocation
             handleLocationError(false, infoWindow, map.getCenter());
         }
+
+        data.on("child_added", function(snapshot) {
+            // Get latitude and longitude from the cloud.
+            var newPosition = snapshot.val().position;
+
+            // Create a google.maps.LatLng object for the position of the marker.
+            // A LatLng object literal (as above) could be used, but the heatmap
+            // in the next step requires a google.maps.LatLng object.
+            var latLng = new google.maps.LatLng(newPosition.lat, newPosition.lng);
+            
+            // Place a marker at that location.
+            var marker = new google.maps.Marker({
+            position: latLng,
+            map: map
+            });
+
+
+
+            marker.addListener('mouseover', function(){
+            	infowindow.open(map, this);
+            });
+
+            marker.addListener('mouseout', function(){
+            	infowindow.close();
+            })
+        });
     }
 
 //=====================================================================
@@ -64,8 +90,8 @@ $(document).ready(function() {
         var html ="<table id='map-popup'>" +
         "<tr><td>Your Name:</td> <td><input type='text' id='name'/> </td> </tr>" +
         "<tr><td>Type of Bin:</td> <td><select id='binType' style='display: block'>" +
-        "<option value='publicBin'>Public Bin</option>" +
-        "<option value='privateBin'>Private Bin</option>" +
+        "<option value='Public'>Public Bin</option>" +
+        "<option value='Private'>Private Bin</option>" +
         "</select> </td></tr>" +
         "<tr><td>Additional Comments:</td> <td><input type='text' id='comments'/> </td></tr>" +
         "<tr><td><input type='button' value='Save-&-Close' id='submit'/></td></tr>";
@@ -115,6 +141,27 @@ $(document).ready(function() {
             position: latLng,
             map: map
             });
+
+            var name = snapshot.val().userName;
+            var binType = snapshot.val().binType;
+            var comments = snapshot.val().comments;
+
+            var html = "<table id='map-popup'>" +
+	        "<tr><td>Pinned by:</td> <td>" + name + "</td> </tr>" +
+	        "<tr><td>Type of Bin:</td> <td>" + binType + "</td></tr>" +
+	        "<tr><td>" + name + "'s comments:</td><td>" + comments + "</td></tr>";
+
+            var infowindow = new google.maps.InfoWindow({
+            	content: html
+        	});
+
+            marker.addListener('mouseover', function(){
+            	infowindow.open(map, this);
+            });
+
+            marker.addListener('mouseout', function(){
+            	infowindow.close();
+            })
         });
 
     }
