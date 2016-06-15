@@ -407,4 +407,8 @@ $(document).ready(function() {
 
     $('.scrollspy').scrollSpy();
 
+//=============================ADDING MARKERS FROM DATABASE=================================
+    console.log("I'm here!");
+
+
 });    
