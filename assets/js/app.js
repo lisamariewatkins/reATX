@@ -32,11 +32,13 @@ $(document).ready(function() {
     
     function initContributeMap(){
         var marker;
+
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
           zoom: 17
-      });
-        var infoWindow = new google.maps.InfoWindow({map: map});
+        });
+
+        // var infoWindow = new google.maps.InfoWindow({map: map});
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -45,7 +47,7 @@ $(document).ready(function() {
                   lat: position.coords.latitude,
                   lng: position.coords.longitude
               };
-              infoWindow.close();
+              // infoWindow.close();
               map.setCenter(pos);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -55,31 +57,64 @@ $(document).ready(function() {
             handleLocationError(false, infoWindow, map.getCenter());
         }
 
-        google.maps.event.addListener(map, 'click', function(event) {
-            placeMarker(event.latLng);
-            google.maps.event.addListener(marker, "click", function() {
-                infowindow.open(map, marker);
-            });
-        });
+        // function placeMarker(location) {
+           
+        // }
 
-        function placeMarker(location) {
-            marker = new google.maps.Marker({
-                position: location, 
-                map: map
-            });
-        }
-
-        var html ="<table>" +
+        var html ="<table id='map-popup'>" +
         "<tr><td>Your Name:</td> <td><input type='text' id='name'/> </td> </tr>" +
         "<tr><td>Type of Bin:</td> <td><select id='binType' style='display: block'>" +
         "<option value='publicBin'>Public Bin</option>" +
         "<option value='privateBin'>Private Bin</option>" +
         "</select> </td></tr>" +
         "<tr><td>Additional Comments:</td> <td><input type='text' id='comments'/> </td></tr>" +
-        "<tr><td><input type='button' value='Save & Close' onclick='saveData()'/></td></tr>";
+        "<tr><td><input type='button' value='Save-&-Close' id='submit'/></td></tr>";
 
-        infowindow = new google.maps.InfoWindow({
+       var infowindow = new google.maps.InfoWindow({
             content: html
+        });
+       
+        google.maps.event.addListener(map, 'click', function(event) {
+            marker = new google.maps.Marker({
+                position: event.latLng, 
+                map: map
+            });
+            google.maps.event.addListener(marker, "click", function() {
+                infowindow.open(map, marker);
+                $("body").on('click', '#submit', function(){
+                    var name = $("#name").val();
+                    var binType = $("#binType").val();
+                    var comments = $("#comments").val();
+                    var position = {lat: marker.position.lat(), lng:marker.position.lng()};
+                    data.push({
+                        userName: name,
+                        binType: binType,
+                        comments: comments,
+                        position: position
+                    })
+
+                    infowindow.close();
+
+                });
+            });
+        });
+
+        
+
+        data.on("child_added", function(snapshot) {
+            // Get latitude and longitude from the cloud.
+            var newPosition = snapshot.val().position;
+
+            // Create a google.maps.LatLng object for the position of the marker.
+            // A LatLng object literal (as above) could be used, but the heatmap
+            // in the next step requires a google.maps.LatLng object.
+            var latLng = new google.maps.LatLng(newPosition.lat, newPosition.lng);
+            
+            // Place a marker at that location.
+            var marker = new google.maps.Marker({
+            position: latLng,
+            map: map
+            });
         });
 
     }
@@ -90,18 +125,18 @@ $(document).ready(function() {
         //Function to pull up table for the marker
     
 
-        function saveData() {
-            var name = $("#name").val().trim();
-            var type = $("#type").val().trim();
-            var latlng = marker.getPosition();
+        // function saveData() {
+        //     var name = $("#name").val().trim();
+        //     var type = $("#type").val().trim();
+        //     var latlng = marker.getPosition();
             
-            data.push({
-                name: name,
-                type: type,
-                position: latlng,
-                dateAdded: Firebase.ServerValue.TIMESTAMP
-            }); 
-        }
+        //     data.push({
+        //         name: name,
+        //         type: type,
+        //         position: latlng,
+        //         dateAdded: Firebase.ServerValue.TIMESTAMP
+        //     }); 
+        // }
 
 
 //============================================================================
