@@ -433,10 +433,13 @@ $(document).ready(function() {
                         center: myLatLng
                     });
 
+                    var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+
                     var marker = new google.maps.Marker({
                         position: myLatLng,
                         map: map,
-                        title: 'Hello World!'
+                        title: 'Hello World!',
+                        icon: image
                     });
                 }
                 initMap();
