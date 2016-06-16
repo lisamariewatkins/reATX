@@ -407,8 +407,29 @@ $(document).ready(function() {
 
     $('.scrollspy').scrollSpy();
 
-//=============================ADDING MARKERS FROM DATABASE=================================
-    console.log("I'm here!");
+//===================ADDING MARKERS FROM DATABASE=========================
+    //console.log("I'm here!");
+    $("#toggleLocations").on('click', function(event){
+        // console.log("YOU CLICKED IT!");
+        var queryURL = "https://data.austintexas.gov/resource/thy5-qknh.json";
+
+        $.ajax({url: queryURL, method:'GET', content: 'application/json'}).done(function(response){
+             // console.log(response[0].zone);
+
+        for (var i = 0; i < response.length; i++) {
+            console.log(response[i].business_name);
+            console.log(response[i].longitude);
+            console.log(response[i].latitude);
+        }
+
+        console.log(response.map(function (value) {
+         return value.zone;
+        }));
+
+      });
+    });
+
+
 
 
 });    
