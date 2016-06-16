@@ -407,24 +407,44 @@ $(document).ready(function() {
 
     $('.scrollspy').scrollSpy();
 
-//===================ADDING MARKERS FROM DATABASE=========================
+//===================MARKERS FROM GOVERNMENT DATABASE=====================
     //console.log("I'm here!");
     $("#toggleLocations").on('click', function(event){
-        // console.log("YOU CLICKED IT!");
+        event.preventDefault();
+        console.log("YOU CLICKED IT!");
+
         var queryURL = "https://data.austintexas.gov/resource/thy5-qknh.json";
 
         $.ajax({url: queryURL, method:'GET', content: 'application/json'}).done(function(response){
-             // console.log(response[0].zone);
 
-        for (var i = 0; i < response.length; i++) {
-            console.log(response[i].business_name);
-            console.log(response[i].longitude);
-            console.log(response[i].latitude);
-        }
+            //for (var i = 0; i < response.length; i++) {
+                var bizName = (response[0].business_name);
+                var longitude = (response[0].longitude);
+                var latitude = (response[0].latitude);
 
-        console.log(response.map(function (value) {
-         return value.zone;
-        }));
+                console.log(bizName, longitude, latitude);
+
+                function initMap() {
+                    console.log("I'm running!");
+                    var myLatLng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: myLatLng
+                    });
+
+                    var marker = new google.maps.Marker({
+                        position: myLatLng,
+                        map: map,
+                        title: 'Hello World!'
+                    });
+                }
+                initMap();
+            //}
+
+            // console.log(response.map(function (value) {
+            //  return value.zone;
+            // }));
 
       });
     });
