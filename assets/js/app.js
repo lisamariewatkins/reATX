@@ -58,7 +58,6 @@ $(document).ready(function() {
                 var latitude = (response[i].latitude);
 
                 function initMap(longitude, latitude) {
-                    console.log("I'm running!");
                     var myLatLng = {
                         lat: parseFloat(latitude),
                         lng: parseFloat(longitude)
@@ -69,9 +68,25 @@ $(document).ready(function() {
                     var marker = new google.maps.Marker({
                         position: myLatLng,
                         map: map,
-                        title: bizName,
                         icon: image
                     });
+
+                    var html = "<div id='iw-container'>" + "<div class='iw-title'><h5>Bin Info</h5></div>" + "<table id='map-popup' class='iw-content'>" +
+                    "<tr><td class='iw-subTitle'>Business: </td><td>" + bizName + "</center></td></tr>";
+
+
+                    var infowindow = new google.maps.InfoWindow({
+                        content: html
+                    });
+
+                    marker.addListener('mouseover', function() {
+                        infowindow.open(map, this);
+                    });
+
+                    marker.addListener('mouseout', function() {
+                        infowindow.close();
+                    })
+
                 }
                 initMap(longitude, latitude);
 
@@ -165,7 +180,6 @@ $(document).ready(function() {
                 var latitude = (response[i].latitude);
 
                 function initMap(longitude, latitude) {
-                    console.log("I'm running!");
                     var myLatLng = {
                         lat: parseFloat(latitude),
                         lng: parseFloat(longitude)
@@ -177,9 +191,25 @@ $(document).ready(function() {
                     var marker = new google.maps.Marker({
                         position: myLatLng,
                         map: map,
-                        title: bizName,
                         icon: image
                     });
+
+                    var html = "<div id='iw-container'>" + "<div class='iw-title'><h5>Bin Info</h5></div>" + "<table id='map-popup' class='iw-content'>" +
+                    "<tr><td class='iw-subTitle'>Business: </td><td>" + bizName + "</center></td></tr>";
+
+
+                    var infowindow = new google.maps.InfoWindow({
+                        content: html
+                    });
+
+                    marker.addListener('mouseover', function() {
+                        infowindow.open(map, this);
+                    });
+
+                    marker.addListener('mouseout', function() {
+                        infowindow.close();
+                    })
+
                 }
                 initMap(longitude, latitude);
 
